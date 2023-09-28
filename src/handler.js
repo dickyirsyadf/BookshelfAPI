@@ -52,6 +52,7 @@ const addBook = (request, h) => {
   response.code(500);
   return response;
 };
+
 const getAllBook = (request, h) => {
   const {query} = request;
   filterBuku = [...books];
@@ -80,6 +81,35 @@ const getAllBook = (request, h) => {
   });
   response.code(200);
   return response;
+=======
+const getAllBook = (request,h) => {
+    const {query} = request;
+    let choises = 0;
+    filterBuku = [...books];
+    if(query.name){
+        const cari = query.name.toLowerCase();
+        filterBuku = filterBuku.filter((book)=> book.name.toLowerCase().includes(cari));
+    }
+    if(query.reading === '0' || query.reading === '1'){
+        const baca = query.reading === '1';
+        filterBuku = filterBuku.filter((book) => book.reading === baca);
+    }
+    if(query.finished === '0' || query.finished === '1'){
+        const selesai = query.finished === '1';
+        filterBuku = filterBuku.filter((buku)=>buku.finished === selesai);
+    }
+    const response = h.response({
+        status: 'success',
+        data: {
+            books: filterBuku.map((book)=>({
+                id: book.id,
+                name: book.name,
+                publisher: book.publisher,
+            })),
+        },
+    });
+    response.code(200);
+    return response;
 };
 const getBookById = (request, h) => {
   const {id} = request.params;
